@@ -1,4 +1,4 @@
-#include "TCPClientServer.h"
+#include "tcpclientserver.h"
 #include <QDate>
 #include <QDataStream>
 #include <QTime>

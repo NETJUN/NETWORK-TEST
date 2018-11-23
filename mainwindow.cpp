@@ -48,7 +48,7 @@ void MainWindow::connectNet() {
 
     mRemoteIp = ui->remoteIP_lineEdit->text();
     if(mRemoteIp.isEmpty()){
-        updateStateBar(QString::fromLocal8Bit("未指定IP地址"), QVariant(QVariant::Int), QVariant(QVariant::Int));
+        updateStateBar(QString::fromUtf8("未指定IP地址"), QVariant(QVariant::Int), QVariant(QVariant::Int));
         return;
     }
     mRemotePort = ui->remoteport_spinBox->text().toInt();
@@ -64,6 +64,7 @@ void MainWindow::connectNet() {
     } else if(ui->tcpclient_radioButton->isChecked()){
         updateStateBar(QString::fromLocal8Bit("TCP通信 ") + mRemoteIp + ":" + QString().number(mRemotePort)
                        + QString::fromLocal8Bit(" 连接中..."), QVariant(QVariant::Int), QVariant(QVariant::Int));
+        netManager->TCPConnectToHost();
     } else {
         updateStateBar(QString::fromLocal8Bit("TCP服务器") + QHostAddress::LocalHost + QString().number(mLocalPort)
                        + QString::fromLocal8Bit(" 监听中..."), QVariant(QVariant::Int), QVariant(QVariant::Int));
