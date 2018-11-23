@@ -16,18 +16,28 @@ public:
     ~NetManager();
 
 public:
-    void setIpAndPort(QHostAddress host, quint16 port);
+    void setIpAndPort(QHostAddress pRemoteHost, quint16 pRemotePort, QHostAddress pLocalHost, quint16 pLocalPort);
+    void TCPConnectToHost();
     void startListen();
     void dataSend(int pMode);
     void dataReceive(int pMode);
+    void UDPStart();
+
+private slots:
+    void TCPConnectionStatus();
+
+signals:
+    void TCPConnectedSignal();
 
 private:
     TCPServer *tcpServer;
     TCPClient *tcpClient;
     UDPClient *udpClient;
 
-    QHostAddress remoteIpAddress;
+    QHostAddress remoteHost;
     quint16 remotePort;
+    QHostAddress localHost;
+    quint16 localPort;
 
     CONNECTION_MODE mode;
 };

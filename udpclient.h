@@ -14,7 +14,7 @@ public:
 public:
     virtual void connectToHost(const QHostAddress remoteIp, const quint16 port);
     virtual void sendData(const QByteArray &data);
-    virtual void receiveData(QByteArray &data);
+    virtual void receiveData();
 
 public:
     void sendData(const QString string, const QString remoteIp, const int port);

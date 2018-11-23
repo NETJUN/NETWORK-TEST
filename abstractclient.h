@@ -17,7 +17,7 @@ public:
 
     virtual void connectToHost(const QHostAddress remoteIp, const quint16 port) = 0;
     virtual void sendData(const QByteArray &data) = 0;
-    virtual void receiveData(QByteArray &data) = 0;
+    virtual void receiveData() = 0;
 };
 
 #endif // ABSTRACTCLIENT_H

@@ -34,9 +34,8 @@ void UDPClient::sendData(const QByteArray &data)
 
 /**
  * @brief UDPClient receiceData
- * @param const QByteArray
  */
-void UDPClient::receiveData(QByteArray &data){
+void UDPClient::receiveData(){
 
 }
 

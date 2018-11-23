@@ -33,6 +33,8 @@ private slots:
     void on_quit_pushButton_released();
     void updateStateBar(QString state, QVariant inNum, QVariant outNum);
 
+    void TCPConnected();
+
 private:
     void initStatusBarWidget();
     void disConnectNet();

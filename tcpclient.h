@@ -6,6 +6,7 @@
 class QTcpSocket;
 
 class TCPClient : public AbstractClient{
+    Q_OBJECT
 public:
     TCPClient(QObject *parent = 0);
     ~TCPClient();
@@ -13,13 +14,17 @@ public:
 public:
     virtual void connectToHost(const QHostAddress remoteIp, const quint16 port);
     virtual void sendData(const QByteArray &data);
-    virtual void receiveData(QByteArray &data);
+    virtual void receiveData();
 
 public:
     bool isConnected();
 
-private:
+public slots:
+    void dataArrived();
     void setConnectStatus();
+
+signals:
+    void connectedSignal();
 
 private:
     QTcpSocket *tcpSocket;
