@@ -38,7 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(netManager, SIGNAL(TCPConnectedSignal()), this, SLOT(TCPConnected()));
     // 更新接收到的数据
     connect(netManager, SIGNAL(messageReceived(QString)), this, SLOT(updateReceiveText(QString)));
-    connect(&client, SIGNAL(updateState(QString, QVariant, QVariant)), this, SLOT(updateStateBar(QString, QVariant, QVariant)));
+    connect(netManager, SIGNAL(updateDataStatus(QString,QVariant,QVariant)), this, SLOT(updateStateBar(QString, QVariant, QVariant)));
     init();
     mReceiveNum = mSendNum = 0;
 }
