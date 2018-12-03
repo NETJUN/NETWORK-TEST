@@ -23,11 +23,14 @@ public:
     void dataReceive(int pMode);
     void UDPStart();
 
-private slots:
-    void TCPConnectionStatus();
-
 signals:
     void TCPConnectedSignal();
+    void messageReceived(QString msg);
+    void updateDataStatus(QString status, QVariant inNum, QVariant outNum);
+private slots:
+    void TCPConnectionStatus();
+    void UDPMessageReceived(QString);
+    void UDPDataStatus(QString, QVariant, QVariant);
 
 private:
     TCPServer *tcpServer;

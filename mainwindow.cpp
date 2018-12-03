@@ -37,7 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
     netManager = new NetManager();
     connect(netManager, SIGNAL(TCPConnectedSignal()), this, SLOT(TCPConnected()));
     // 更新接收到的数据
-    connect(&client, SIGNAL(valueChanged(QString)), this, SLOT(updateReceiveText(QString)));
+    connect(netManager, SIGNAL(messageReceived(QString)), this, SLOT(updateReceiveText(QString)));
     connect(&client, SIGNAL(updateState(QString, QVariant, QVariant)), this, SLOT(updateStateBar(QString, QVariant, QVariant)));
     init();
     mReceiveNum = mSendNum = 0;
@@ -61,6 +61,7 @@ void MainWindow::connectNet() {
                        QVariant(QVariant::Int), QVariant(QVariant::Int));
         // 开启UDP通信
         netManager->UDPStart();
+        ui->handSend_pushButton->setEnabled(true);
     } else if(ui->tcpclient_radioButton->isChecked()){
         updateStateBar(QString::fromLocal8Bit("TCP通信 ") + mRemoteIp + ":" + QString().number(mRemotePort)
                        + QString::fromLocal8Bit(" 连接中..."), QVariant(QVariant::Int), QVariant(QVariant::Int));
