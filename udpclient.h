@@ -17,7 +17,7 @@ public:
     virtual void receiveData();
 
 public:
-    void sendData(const QString string, const QString remoteIp, const int port);
+   // void sendData(const QString string, const QString remoteIp, const int port);
     void udpStart(const QHostAddress localIp, const int listnerPort, const QHostAddress remoteIp, const int remotePort);
     void udpStop(const QString string, const QString remoteIp, const int port);
     void readyRead(QUdpSocket* socket);

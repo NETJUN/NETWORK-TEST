@@ -63,14 +63,17 @@ void MainWindow::connectNet() {
                        QVariant(QVariant::Int), QVariant(QVariant::Int));
         // 开启UDP通信
         netManager->UDPStart();
+        mode = UDP_MODE;
     } else if(ui->tcpclient_radioButton->isChecked()){
         updateStateBar(QString::fromLocal8Bit("TCP通信 ") + mRemoteIp + ":" + QString().number(mRemotePort)
                        + QString::fromLocal8Bit(" 连接中..."), QVariant(QVariant::Int), QVariant(QVariant::Int));
         netManager->TCPConnectToHost();
+        mode = TCP_CLIENT_MODE;
     } else {
         updateStateBar(QString::fromLocal8Bit("TCP服务器") + QHostAddress::LocalHost + QString().number(mLocalPort)
                        + QString::fromLocal8Bit(" 监听中..."), QVariant(QVariant::Int), QVariant(QVariant::Int));
         netManager->startListen();
+        mode = TCP_SERVER_MODE;
     }
 
     connected = true;
@@ -253,7 +256,8 @@ void MainWindow::on_handSend_pushButton_released() {
     QString string = ui->send_plainTextEdit->toPlainText();
     if(string.length() != 0) {
         QByteArray data(string.toLocal8Bit());
-        client.sendData(data);
+
+        netManager->dataSend(data, mode);
     }
 }
 

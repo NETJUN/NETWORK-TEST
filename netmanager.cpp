@@ -21,6 +21,20 @@ NetManager::~NetManager() {
     }
 }
 
+void NetManager::dataSend(QByteArray data, int pMode) {
+    switch (pMode) {
+    case TCP_CLIENT_MODE:
+        break;
+    case TCP_SERVER_MODE:
+        break;
+    case UDP_MODE:
+        udpClient->connectToHost(remoteHost, remotePort);
+        udpClient->sendData(data);
+    default:
+        break;
+    }
+}
+
 void NetManager::setIpAndPort(QHostAddress pRemoteHost, quint16 pRemotePort, QHostAddress pLocalHost, quint16 pLocalPort) {
     remoteHost = pRemoteHost;
     remotePort = pRemotePort;

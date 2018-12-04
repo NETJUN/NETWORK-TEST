@@ -70,6 +70,7 @@ private:
     quint64 mReceiveNum;
     /** 发送总数 */
     quint64 mSendNum;
+    CONNECTION_MODE mode;
 };
 
 #endif // MAINWINDOW_H

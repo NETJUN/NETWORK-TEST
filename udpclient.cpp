@@ -29,7 +29,7 @@ void UDPClient::sendData(const QByteArray &data)
     if(udpSendSocket == nullptr)
         return;
     qDebug("%s %d", __func__, __LINE__);
-    emit updateState(QString(), QVariant(QVariant::Int), udpSendSocket->writeDatagram(data, QHostAddress(remoteIpAdress), remotePort));
+    emit updateState(QString(), QVariant(QVariant::Int), udpSendSocket->writeDatagram(data, remoteIpAdress, remotePort));
 }
 
 /**

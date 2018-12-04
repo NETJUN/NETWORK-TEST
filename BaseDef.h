@@ -2,7 +2,8 @@
 #define BASEDEF_H
 
 enum CONNECTION_MODE {
-    TCP_MODE,
+    TCP_CLIENT_MODE,
+    TCP_SERVER_MODE,
     UDP_MODE,
 };
 
