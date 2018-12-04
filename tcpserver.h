@@ -10,7 +10,7 @@ public:
     TCPServer(QObject* parent);
 
 private:
-    void incomingConnection(int socketId);
+    void incomingConnection(qintptr socketId);
 };
 
 #endif // TCPSERCER_H
