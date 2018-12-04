@@ -37,8 +37,8 @@ MainWindow::MainWindow(QWidget *parent) :
     netManager = new NetManager();
     connect(netManager, SIGNAL(TCPConnectedSignal()), this, SLOT(TCPConnected()));
     // 更新接收到的数据
-    connect(netManager, SIGNAL(messageReceived(QString)), this, SLOT(updateReceiveText(QString)));
-    connect(netManager, SIGNAL(updateDataStatus(QString,QVariant,QVariant)), this, SLOT(updateStateBar(QString, QVariant, QVariant)));
+    connect(netManager, SIGNAL(messageReceivedSignal(QString)), this, SLOT(updateReceiveText(QString)));
+    connect(netManager, SIGNAL(updateDataStatusSignal(QString, QVariant, QVariant)), this, SLOT(updateStateBar(QString, QVariant, QVariant)));
     init();
     mReceiveNum = mSendNum = 0;
 }
@@ -136,9 +136,8 @@ void MainWindow::init() {
     ui->localport_spinBox->setEnabled(true);
     // 禁用button
     ui->handSend_pushButton->setEnabled(false);
-    //
-    client.udpStop(NULL, NULL, NULL);
-
+    // 确保关闭UDP端口
+    netManager->UDPStop();
     updateStateBar(QString::fromLocal8Bit("本地IP: ") + chelper.getLocalHostIP().toString() + QString::fromLocal8Bit(" 无连接"),
                    QVariant(QVariant::Int), QVariant(QVariant::Int));
 }

@@ -22,14 +22,15 @@ public:
     void dataSend(int pMode);
     void dataReceive(int pMode);
     void UDPStart();
+    void UDPStop();
 
 signals:
     void TCPConnectedSignal();
-    void messageReceived(QString msg);
-    void updateDataStatus(QString status, QVariant inNum, QVariant outNum);
+    void messageReceivedSignal(QString msg);
+    void updateDataStatusSignal(QString status, QVariant inNum, QVariant outNum);
 private slots:
     void TCPConnectionStatus();
-    void UDPMessageReceived(QString);
+    void UDPMessageReceivedSignal(QString);
     void UDPDataStatus(QString, QVariant, QVariant);
 
 private:

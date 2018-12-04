@@ -5,7 +5,7 @@ NetManager::NetManager(QObject *parent) {
     udpClient = new UDPClient(this);
 
     connect(tcpClient, SIGNAL(connectedSignal()), this, SLOT(TCPConnectionStatus()));
-    connect(udpClient, SIGNAL(valueChanged(QString)), this, SLOT(UDPMessageReceived(QString)));
+    connect(udpClient, SIGNAL(valueChanged(QString)), this, SLOT(UDPMessageReceivedSignal(QString)));
     connect(udpClient, SIGNAL(updateState(QString,QVariant,QVariant)), this, SLOT(UDPDataStatus(QString, QVariant, QVariant)));
 }
 
@@ -44,14 +44,18 @@ void NetManager::UDPStart() {
     udpClient->udpStart(localHost, localPort, remoteHost, remotePort);
 }
 
+void NetManager::UDPStop() {
+    udpClient->udpStop(NULL, NULL, NULL);
+}
+
 void NetManager::TCPConnectionStatus() {
     emit TCPConnectedSignal();
 }
 
-void NetManager::UDPMessageReceived(QString msg) {
-    emit messageReceived(msg);
+void NetManager::UDPMessageReceivedSignal(QString msg) {
+    emit messageReceivedSignal(msg);
 }
 
 void NetManager::UDPDataStatus(QString status, QVariant inNum, QVariant outNum) {
-    emit updateDataStatus(status, inNum, outNum);
+    emit updateDataStatusSignal(status, inNum, outNum);
 }
