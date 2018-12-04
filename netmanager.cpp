@@ -48,10 +48,11 @@ void NetManager::TCPConnectToHost() {
 
 void NetManager::startListen() {
     tcpServer = new TCPServer(this);
-    if(!tcpServer->listen(QHostAddress::Any, 8087)) {
+    if(!tcpServer->listen(localHost, localPort)) {
         qDebug("Failed to bind to port");
         return;
     }
+    qDebug() << "listenning ip:" << localHost.toString() << " Port:" + QString("%1").arg(localPort);
 }
 
 void NetManager::UDPStart() {
