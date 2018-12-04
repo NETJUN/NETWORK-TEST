@@ -2,6 +2,7 @@
 #include <QDate>
 #include <QDataStream>
 #include <QTime>
+#include <QHostAddress>
 
 TCPClientServer::TCPClientServer(QObject *parent)
     :QTcpSocket(parent){
@@ -12,6 +13,7 @@ TCPClientServer::TCPClientServer(QObject *parent)
 }
 
 void TCPClientServer::readClient(){
+   /*
     QDataStream in(this);
 
     if(nextBlockSize == 0){
@@ -43,6 +45,8 @@ void TCPClientServer::readClient(){
 
     QDataStream out(this);
     out << quint16(0xFFFF);
+    */
+    qDebug() << "received data from:" << peerAddress().toString() << QString("%1").arg(peerPort());
 }
 
 void TCPClientServer::generateRandomData(const QString &from, const QString &to, const QDate &date, const QTime &time){
