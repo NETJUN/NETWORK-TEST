@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     tcpclient.cpp \
     tcpclientserver.cpp \
     tcpserver.cpp \
-    netmanager.cpp
+    netmanager.cpp \
+    DataOutputShow.cpp
 
 HEADERS  += mainwindow.h \
     udpclient.h \
@@ -30,6 +31,7 @@ HEADERS  += mainwindow.h \
     tcpclientserver.h \
     tcpserver.h \
     netmanager.h \
-    BaseDef.h
+    BaseDef.h \
+    DataOutputShow.h
 
 FORMS    += mainwindow.ui

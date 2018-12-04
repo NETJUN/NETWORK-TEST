@@ -1,5 +1,8 @@
 #include "tcpclient.h"
+#include "DataOutputShow.h"
 #include <QTcpSocket>
+#include <QDataStream>
+#include <QByteArray>
 
 TCPClient::TCPClient(QObject *parent)
     :tcpSocket(new QTcpSocket(parent)) {
@@ -19,6 +22,7 @@ void TCPClient::connectToHost(const QHostAddress remoteIp, const quint16 port) {
 
 void TCPClient::sendData(const QByteArray &data) {
     tcpSocket->write(data);
+    emit DataOutputShow::getDataOutputInstance()->updateDataStatusSignal(QString(), QVariant(), data.size());
 }
 
 void TCPClient::receiveData() {
@@ -26,7 +30,16 @@ void TCPClient::receiveData() {
 }
 
 void TCPClient::dataArrived() {
-
+    QDataStream in(tcpSocket);
+    qint8 word;
+    QByteArray data;
+    data.push_back("Data From Server:");
+    while(!in.atEnd()) {
+         in >> word;
+         data.push_back(word);
+    }
+    emit DataOutputShow::getDataOutputInstance()->messageReceivedSignal(data);
+    emit DataOutputShow::getDataOutputInstance()->updateDataStatusSignal(QString(), data.size(), QVariant());
 }
 
 void TCPClient::setConnectStatus() {

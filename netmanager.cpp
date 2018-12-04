@@ -21,9 +21,11 @@ NetManager::~NetManager() {
     }
 }
 
-void NetManager::dataSend(QByteArray data, int pMode) {
+void NetManager::dataSend(QByteArray data, CONNECTION_MODE pMode) {
     switch (pMode) {
     case TCP_CLIENT_MODE:
+        tcpClient->connectToHost(remoteHost, remotePort);
+        tcpClient->sendData(data);
         break;
     case TCP_SERVER_MODE:
         break;
@@ -48,7 +50,9 @@ void NetManager::TCPConnectToHost() {
 
 void NetManager::startListen() {
     tcpServer = new TCPServer(this);
-    if(!tcpServer->listen(localHost, localPort)) {
+    if(!tcpServer->listen(QHostAddress("192.168.1.100"), localPort)) {
+        delete tcpServer;
+        tcpServer = NULL;
         qDebug("Failed to bind to port");
         return;
     }
@@ -73,4 +77,23 @@ void NetManager::UDPMessageReceivedSignal(QString msg) {
 
 void NetManager::UDPDataStatus(QString status, QVariant inNum, QVariant outNum) {
     emit updateDataStatusSignal(status, inNum, outNum);
+}
+
+/**
+ * @brief ¶Ï¿ªÍøÂç
+ * @param CONNECTION_MODE pMode
+ * @author yxj
+ */
+void NetManager::disConnectNet(CONNECTION_MODE pMode) {
+    switch (pMode) {
+    case TCP_CLIENT_MODE:
+        break;
+    case TCP_SERVER_MODE:
+        break;
+    case UDP_MODE:
+        UDPStop();
+        break;
+    default:
+        break;
+    }
 }

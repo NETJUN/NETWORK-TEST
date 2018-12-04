@@ -5,6 +5,7 @@
 #include <QLabel>
 #include <QDate>
 #include "commonhelper.h"
+#include "DataOutputShow.h"
 #include <QSettings>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -39,6 +40,8 @@ MainWindow::MainWindow(QWidget *parent) :
     // 更新接收到的数据
     connect(netManager, SIGNAL(messageReceivedSignal(QString)), this, SLOT(updateReceiveText(QString)));
     connect(netManager, SIGNAL(updateDataStatusSignal(QString, QVariant, QVariant)), this, SLOT(updateStateBar(QString, QVariant, QVariant)));
+    connect(DataOutputShow::getDataOutputInstance(), SIGNAL(messageReceivedSignal(QString)), this, SLOT(updateReceiveText(QString)));
+   // connect(DataOutputShow::getDataOutputInstance(), SIGNAL(updateDataStatusSignal(QString,QVariant,QVariant)), this, SLOT(updateStateBar(QString,QVariant,QVariant)));
     init();
     mReceiveNum = mSendNum = 0;
     mLocalIp = commonHelper.getLocalHostIP().toString();
@@ -186,11 +189,10 @@ void MainWindow::disConnectNet() {
     ui->localport_spinBox->setEnabled(true);
     // 禁用button
     ui->handSend_pushButton->setEnabled(false);
-    //
-    client.udpStop(NULL, NULL, NULL);
+    // 断开连接
+    netManager->disConnectNet(mode);
 
-
-    updateStateBar(QString::fromLocal8Bit("UDP通信停止"), QVariant(QVariant::Int), QVariant(QVariant::Int));
+    updateStateBar(QString::fromLocal8Bit("连接断开"), QVariant(QVariant::Int), QVariant(QVariant::Int));
 }
 
 void MainWindow::doSettings(bool isWrite)
@@ -213,6 +215,7 @@ void MainWindow::doSettings(bool isWrite)
 MainWindow::~MainWindow()
 {
     doSettings(true);
+    delete netManager;
     delete ui;
 }
 

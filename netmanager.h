@@ -19,10 +19,11 @@ public:
     void setIpAndPort(QHostAddress pRemoteHost, quint16 pRemotePort, QHostAddress pLocalHost, quint16 pLocalPort);
     void TCPConnectToHost();
     void startListen();
-    void dataSend(QByteArray data, int pMode);
-    void dataReceive(int pMode);
+    void dataSend(QByteArray data, CONNECTION_MODE pMode);
+    void dataReceive(CONNECTION_MODE pMode);
     void UDPStart();
     void UDPStop();
+    void disConnectNet(CONNECTION_MODE pMode);
 
 signals:
     void TCPConnectedSignal();

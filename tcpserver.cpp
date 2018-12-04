@@ -1,8 +1,8 @@
 #include "tcpserver.h"
 #include "tcpclientserver.h"
 
-TCPServer::TCPServer(QObject *parent)
-    :QTcpServer(parent){
+TCPServer::TCPServer(QObject* parent)
+    :QTcpServer(parent) {
 
 }
 

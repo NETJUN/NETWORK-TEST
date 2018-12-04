@@ -6,14 +6,22 @@ class TCPClientServer : public QTcpSocket{
     Q_OBJECT
 
 public:
-    TCPClientServer(QObject *parent = 0);
+    TCPClientServer(QObject *parent);
+
+signals:
+    void valueChanged(QString newValue);
+    void updateState(QString state, QVariant inNum, QVariant outNum);
 
 private slots:
     void readClient();
 
 private:
-    void generateRandomData(const QString &from, const QString &to, const QDate &date, const QTime &time);
+    void setSignalAndSlotConnect();
+
+private:
+    void replyMessageByServer(QByteArray &data);
     quint16 nextBlockSize;
+
 };
 
 #endif // CLIENTSERVER_H
