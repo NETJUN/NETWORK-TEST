@@ -13,7 +13,7 @@ UDPClient::UDPClient(QObject *parent){
  * @param port 目标端口号
  */
 void UDPClient::connectToHost(const QHostAddress remoteIp, const quint16 port){
-    remoteIpAdress = remoteIp;
+    remoteIpAddress = remoteIp;
     remotePort = port;
 }
 
@@ -25,11 +25,11 @@ void UDPClient::connectToHost(const QHostAddress remoteIp, const quint16 port){
  */
 void UDPClient::sendData(const QByteArray &data)
 {
-    qDebug("%s %d", __func__, __LINE__);
+    qDebug("%s", __func__);
     if(udpSendSocket == nullptr)
         return;
-    qDebug("%s %d", __func__, __LINE__);
-    emit updateState(QString(), QVariant(QVariant::Int), udpSendSocket->writeDatagram(data, data.size(), remoteIpAdress, remotePort));
+    qint64 sendSize = udpSendSocket->writeDatagram(data, data.size(), remoteIpAddress, remotePort);
+    emit updateState(QString(), QVariant(QVariant::Int), sendSize);
 }
 
 /**

@@ -7,6 +7,7 @@ TCPServer::TCPServer(QObject *parent)
 }
 
 void TCPServer::incomingConnection(int socketId){
+    qDebug("%s", __func__);
     TCPClientServer *socket = new TCPClientServer(this);
     socket->setSocketDescriptor(socketId);
 }

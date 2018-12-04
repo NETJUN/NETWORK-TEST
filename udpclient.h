@@ -35,7 +35,7 @@ private:
     void udpListnerStart(const QHostAddress ip, const int port);
     void udpListnerStop();
 
-    QHostAddress remoteIpAdress;
+    QHostAddress remoteIpAddress;
     quint16 remotePort;
 };
 
