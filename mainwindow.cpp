@@ -41,6 +41,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(netManager, SIGNAL(updateDataStatusSignal(QString, QVariant, QVariant)), this, SLOT(updateStateBar(QString, QVariant, QVariant)));
     init();
     mReceiveNum = mSendNum = 0;
+    mLocalIp = commonHelper.getLocalHostIP().toString();
 }
 
 void MainWindow::connectNet() {
@@ -54,14 +55,14 @@ void MainWindow::connectNet() {
     mRemotePort = ui->remoteport_spinBox->text().toInt();
     mLocalPort = ui->localport_spinBox->text().toInt();
 
-    netManager->setIpAndPort(QHostAddress(mRemoteIp), mRemotePort, QHostAddress::LocalHost, mLocalPort);
+
+    netManager->setIpAndPort(QHostAddress(mRemoteIp), mRemotePort, QHostAddress(mLocalIp), mLocalPort);
 
     if(ui->udp_radioButton->isChecked()) {
         updateStateBar(QString::fromLocal8Bit("UDP通信 ") + mRemoteIp + ":" + QString().number(mRemotePort),
                        QVariant(QVariant::Int), QVariant(QVariant::Int));
         // 开启UDP通信
         netManager->UDPStart();
-        ui->handSend_pushButton->setEnabled(true);
     } else if(ui->tcpclient_radioButton->isChecked()){
         updateStateBar(QString::fromLocal8Bit("TCP通信 ") + mRemoteIp + ":" + QString().number(mRemotePort)
                        + QString::fromLocal8Bit(" 连接中..."), QVariant(QVariant::Int), QVariant(QVariant::Int));
@@ -71,6 +72,23 @@ void MainWindow::connectNet() {
                        + QString::fromLocal8Bit(" 监听中..."), QVariant(QVariant::Int), QVariant(QVariant::Int));
         netManager->startListen();
     }
+
+    connected = true;
+    // 将状态设置为 通
+    ui->state_label->setText(QString::fromLocal8Bit("通"));
+    QPalette pa;
+    pa.setColor(QPalette::WindowText,Qt::blue);
+    ui->state_label->setPalette(pa);
+
+    // 将按钮设置为　断开网络
+    ui->connect_pushButton->setText(QString::fromLocal8Bit("断开网络"));
+
+    // 禁用远程端口，本地端口，远程IP
+    ui->remoteIP_lineEdit->setEnabled(false);
+    ui->remoteport_spinBox->setEnabled(false);
+    ui->localport_spinBox->setEnabled(false);
+    // 使能button
+    ui->handSend_pushButton->setEnabled(true);
 }
 
 void MainWindow::updateReceiveText(const QString string) {
@@ -138,7 +156,7 @@ void MainWindow::init() {
     ui->handSend_pushButton->setEnabled(false);
     // 确保关闭UDP端口
     netManager->UDPStop();
-    updateStateBar(QString::fromLocal8Bit("本地IP: ") + chelper.getLocalHostIP().toString() + QString::fromLocal8Bit(" 无连接"),
+    updateStateBar(QString::fromLocal8Bit("本地IP: ") + commonHelper.getLocalHostIP().toString() + QString::fromLocal8Bit(" 无连接"),
                    QVariant(QVariant::Int), QVariant(QVariant::Int));
 }
 
@@ -183,7 +201,7 @@ void MainWindow::doSettings(bool isWrite)
         settings.setValue(REMOTE_PORT, mRemotePort);
         settings.setValue(LOCAL_PORT, mLocalPort);
     } else {
-        mRemoteIp = settings.value(REMOTE_IP, chelper.getLocalHostIP().toString()).toString();
+        mRemoteIp = settings.value(REMOTE_IP, commonHelper.getLocalHostIP().toString()).toString();
         mRemotePort = settings.value(REMOTE_PORT, 1234).toInt();
         mLocalPort = settings.value(LOCAL_PORT, 2468).toInt();
     }

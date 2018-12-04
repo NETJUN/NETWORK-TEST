@@ -48,9 +48,10 @@ private:
     bool connected;
     UDPClient client;
     /** 工具类 */
-    CommonHelper chelper;
+    CommonHelper commonHelper;
     NetManager *netManager;
     QString mRemoteIp;
+    QString mLocalIp;
     quint16 mRemotePort;
     quint16 mLocalPort;
 
