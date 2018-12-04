@@ -48,7 +48,7 @@ void NetManager::TCPConnectToHost() {
 
 void NetManager::startListen() {
     tcpServer = new TCPServer(this);
-    if(tcpServer->listen(QHostAddress::Any, 8088)) {
+    if(!tcpServer->listen(QHostAddress::Any, 8087)) {
         qDebug("Failed to bind to port");
         return;
     }
