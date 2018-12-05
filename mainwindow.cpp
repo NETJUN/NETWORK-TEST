@@ -41,7 +41,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(netManager, SIGNAL(messageReceivedSignal(QString)), this, SLOT(updateReceiveText(QString)));
     connect(netManager, SIGNAL(updateDataStatusSignal(QString, QVariant, QVariant)), this, SLOT(updateStateBar(QString, QVariant, QVariant)));
     connect(DataOutputShow::getDataOutputInstance(), SIGNAL(messageReceivedSignal(QString)), this, SLOT(updateReceiveText(QString)));
-   // connect(DataOutputShow::getDataOutputInstance(), SIGNAL(updateDataStatusSignal(QString,QVariant,QVariant)), this, SLOT(updateStateBar(QString,QVariant,QVariant)));
+    connect(DataOutputShow::getDataOutputInstance(), SIGNAL(updateDataStatusSignal(QString,QVariant,QVariant)), this, SLOT(updateStateBar(QString,QVariant,QVariant)));
     init();
     mReceiveNum = mSendNum = 0;
     mLocalIp = commonHelper.getLocalHostIP().toString();
