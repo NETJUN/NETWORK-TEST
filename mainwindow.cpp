@@ -4,6 +4,7 @@
 #include "udpclient.h"
 #include <QLabel>
 #include <QDate>
+#include <QStringList>
 #include "commonhelper.h"
 #include "DataOutputShow.h"
 #include <QSettings>
@@ -259,7 +260,11 @@ void MainWindow::on_handSend_pushButton_released() {
     QString string = ui->send_plainTextEdit->toPlainText();
     if(string.length() != 0) {
         QByteArray data(string.toLocal8Bit());
-
+        QStringList tmp = string.split(" ");
+        bool ok;
+        for(auto itr = tmp.begin(); itr != tmp.end(); ++itr) {
+            data.push_back(itr->toInt(&ok, 16));
+        }
         netManager->dataSend(data, mode);
     }
 }
