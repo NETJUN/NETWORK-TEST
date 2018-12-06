@@ -263,7 +263,7 @@ void MainWindow::on_handSend_pushButton_released() {
         QStringList tmp = string.split(" ");
         bool ok;
         for(auto itr = tmp.begin(); itr != tmp.end(); ++itr) {
-            data.push_back(itr->toInt(&ok, 16));
+            data.push_back(itr->toUInt(&ok, 16));
         }
         netManager->dataSend(data, mode);
     }
