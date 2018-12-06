@@ -259,7 +259,7 @@ void MainWindow::on_handSend_pushButton_released() {
     // 获取 rmeote ip/ port 和内容
     QString string = ui->send_plainTextEdit->toPlainText();
     if(string.length() != 0) {
-        QByteArray data(string.toLocal8Bit());
+        QByteArray data;
         QStringList tmp = string.split(" ");
         bool ok;
         for(auto itr = tmp.begin(); itr != tmp.end(); ++itr) {
