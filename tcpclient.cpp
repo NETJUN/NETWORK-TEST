@@ -22,10 +22,12 @@ void TCPClient::connectToHost(const QHostAddress remoteIp, const quint16 port) {
 }
 
 void TCPClient::sendData(const QByteArray &data) {
+    quint32 len = 0;
     for(int i = 0; i < 100; ++i) {
         tcpSocket->write(data);
+        len += data.size();
     }
-    emit DataOutputShow::getDataOutputInstance()->updateDataStatusSignal(QString(), QVariant(), data.size());
+    emit DataOutputShow::getDataOutputInstance()->updateDataStatusSignal(QString(), QVariant(), len);
 }
 
 void TCPClient::closeClient() {
