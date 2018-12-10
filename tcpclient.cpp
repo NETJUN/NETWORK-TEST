@@ -1,5 +1,6 @@
 #include "tcpclient.h"
 #include "DataOutputShow.h"
+#include "ParameterCenter.h"
 #include <QTcpSocket>
 #include <QDataStream>
 #include <QByteArray>
@@ -21,7 +22,9 @@ void TCPClient::connectToHost(const QHostAddress remoteIp, const quint16 port) {
 }
 
 void TCPClient::sendData(const QByteArray &data) {
-    tcpSocket->write(data);
+    for(int i = 0; i < 500; ++i) {
+        tcpSocket->write(data);
+    }
     emit DataOutputShow::getDataOutputInstance()->updateDataStatusSignal(QString(), QVariant(), data.size());
 }
 
@@ -34,6 +37,8 @@ void TCPClient::receiveData() {
 }
 
 void TCPClient::dataArrived() {
+    // 收到下位机发来的数据请求，立即发送数据
+    sendData(ParameterCenter::getParameterCenterInstance()->getInputData());
     QDataStream in(tcpSocket);
     qint8 word;
     QByteArray data;

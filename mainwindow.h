@@ -31,6 +31,10 @@ private slots:
     void updateReceiveText(const QString string);
     void on_clearCounter_pushButton_released();
     void on_quit_pushButton_released();
+    void ipLineEditSlot();
+    void remotePortSpinBoxSlot(int value);
+    void localPortSpinBoxSlot(int value);
+    void sendPlainTextEditSlot();
     void updateStateBar(QString state, QVariant inNum, QVariant outNum);
 
     void TCPConnected();

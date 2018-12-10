@@ -7,6 +7,7 @@
 #include <QStringList>
 #include "commonhelper.h"
 #include "DataOutputShow.h"
+#include "ParameterCenter.h"
 #include <QSettings>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -43,6 +44,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(netManager, SIGNAL(updateDataStatusSignal(QString, QVariant, QVariant)), this, SLOT(updateStateBar(QString, QVariant, QVariant)));
     connect(DataOutputShow::getDataOutputInstance(), SIGNAL(messageReceivedSignal(QString)), this, SLOT(updateReceiveText(QString)));
     connect(DataOutputShow::getDataOutputInstance(), SIGNAL(updateDataStatusSignal(QString,QVariant,QVariant)), this, SLOT(updateStateBar(QString,QVariant,QVariant)));
+
+    connect(ui->remoteIP_lineEdit, SIGNAL(returnPressed()), this, SLOT(ipLineEditSlot()));
+    connect(ui->remoteport_spinBox, SIGNAL(valueChanged(int)), this, SLOT(localPortSpinBoxSlot(int)));
+    connect(ui->localport_spinBox, SIGNAL(valueChanged(int)), this, SLOT(remotePortSpinBoxSlot(int)));
+    connect(ui->send_plainTextEdit, SIGNAL(textChanged()), this, SLOT(sendPlainTextEditSlot()));
     init();
     mReceiveNum = mSendNum = 0;
     mLocalIp = commonHelper.getLocalHostIP().toString();
@@ -211,6 +217,9 @@ void MainWindow::doSettings(bool isWrite)
         mRemotePort = settings.value(REMOTE_PORT, 1234).toInt();
         mLocalPort = settings.value(LOCAL_PORT, 2468).toInt();
     }
+    ParameterCenter::getParameterCenterInstance()->setLocalPort(mLocalPort);
+    ParameterCenter::getParameterCenterInstance()->setRemotePort(mRemotePort);
+    ParameterCenter::getParameterCenterInstance()->setRemoteIP(QHostAddress(mRemoteIp));
 }
 
 MainWindow::~MainWindow()
@@ -271,6 +280,34 @@ void MainWindow::on_handSend_pushButton_released() {
 
 void MainWindow::on_quit_pushButton_released() {
     QApplication::quit();
+}
+
+void MainWindow::ipLineEditSlot() {
+    QString text = ui->remoteIP_lineEdit->text();
+    ParameterCenter::getParameterCenterInstance()->setRemoteIP(QHostAddress(text));
+}
+
+void MainWindow::localPortSpinBoxSlot(int value) {
+    ParameterCenter::getParameterCenterInstance()->setLocalPort(value);
+}
+
+void MainWindow::remotePortSpinBoxSlot(int value) {
+    ParameterCenter::getParameterCenterInstance()->setRemotePort(value);
+}
+
+void MainWindow::sendPlainTextEditSlot() {
+    qDebug("%s", __func__);
+    QString string = ui->send_plainTextEdit->toPlainText();
+    if(string.length() != 0) {
+        QByteArray data;
+        QStringList tmp = string.split(" ");
+        bool ok;
+        for(auto itr = tmp.begin(); itr != tmp.end(); ++itr) {
+            data.push_back(itr->toUInt(&ok, 16));
+        }
+        ParameterCenter::getParameterCenterInstance()->setInputData(data);
+    }
+
 }
 
 void MainWindow::initStatusBarWidget() {
