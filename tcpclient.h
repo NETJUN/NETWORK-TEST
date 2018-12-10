@@ -18,6 +18,7 @@ public:
 
 public:
     bool isConnected();
+    void closeClient();
 
 public slots:
     void dataArrived();

@@ -87,8 +87,10 @@ void NetManager::UDPDataStatus(QString status, QVariant inNum, QVariant outNum) 
 void NetManager::disConnectNet(CONNECTION_MODE pMode) {
     switch (pMode) {
     case TCP_CLIENT_MODE:
+        tcpClient->closeClient();
         break;
     case TCP_SERVER_MODE:
+        delete tcpServer;
         break;
     case UDP_MODE:
         UDPStop();

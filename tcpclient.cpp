@@ -25,6 +25,10 @@ void TCPClient::sendData(const QByteArray &data) {
     emit DataOutputShow::getDataOutputInstance()->updateDataStatusSignal(QString(), QVariant(), data.size());
 }
 
+void TCPClient::closeClient() {
+    tcpSocket->close();
+}
+
 void TCPClient::receiveData() {
 
 }
