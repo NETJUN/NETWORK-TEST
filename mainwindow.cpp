@@ -297,19 +297,8 @@ void MainWindow::remotePortSpinBoxSlot(int value) {
 }
 
 void MainWindow::sendPlainTextEditSlot() {
-//    qDebug("%s", __func__);
-//    QString string = ui->send_plainTextEdit->toPlainText();
-//    if(string.length() != 0) {
-//        QByteArray data;
-//        QStringList tmp = string.split(" ");
-//        bool ok;
-//        for(auto itr = tmp.begin(); itr != tmp.end(); ++itr) {
-//            long num = itr->toLong(&ok, 16);
-//            data.push_back(itr->toLong(&ok, 16));
-//        }
-//        ParameterCenter::getParameterCenterInstance()->setInputData(data);
-//    }
-
+    QString string = ui->send_plainTextEdit->toPlainText();
+    ParameterCenter::getParameterCenterInstance()->setInputData(string.toStdString().c_str());
 }
 
 void MainWindow::initStatusBarWidget() {

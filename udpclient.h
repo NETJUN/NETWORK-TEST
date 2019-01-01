@@ -37,6 +37,8 @@ private:
 
     QHostAddress remoteIpAddress;
     quint16 remotePort;
+
+    quint32 sendDataSize;
 };
 
 #endif // UDPCLIENT_H

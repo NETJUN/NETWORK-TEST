@@ -1,8 +1,10 @@
 ﻿#include "udpclient.h"
+#include "ParameterCenter.h"
 #include <QMessageBox>
 #include <QUdpSocket>
 
-UDPClient::UDPClient(QObject *parent){
+UDPClient::UDPClient(QObject *parent)
+    :sendDataSize(0){
     qDebug("%s", __func__);
 }
 
@@ -28,8 +30,13 @@ void UDPClient::sendData(const QByteArray &data)
     qDebug("%s", __func__);
     if(udpSendSocket == nullptr)
         return;
-    qint64 sendSize = udpSendSocket->writeDatagram(data, data.size(), remoteIpAddress, remotePort);
-    emit updateState(QString(), QVariant(QVariant::Int), sendSize);
+    for(int i = 0; i < sendDataSize; ++i) {
+        qint64 sendSize = udpSendSocket->writeDatagram(data, data.size(), remoteIpAddress, remotePort);
+        if(sendSize != data.size()) {
+            qDebug("输出有问题");
+        }
+    }
+    emit updateState(QString(), QVariant(QVariant::Int), sendDataSize * data.size());
 }
 
 /**
@@ -160,10 +167,13 @@ void UDPClient::readyRead(QUdpSocket* socket)
     QHostAddress sender;
     quint16 senderPort;
     socket->readDatagram(Buffer.data(), Buffer.size(), &sender, &senderPort);
+    sendDataSize = Buffer.toUInt();
+    sendData(ParameterCenter::getParameterCenterInstance()->getInputData());
 
     qDebug() << "Message from:" << sender.toString();
     qDebug() << "Message port:" << senderPort;
     qDebug() << "Message: " << Buffer;
+
     emit valueChanged(Buffer);
     emit updateState(QString(), Buffer.size(), QVariant(QVariant::Int));
 }
