@@ -267,15 +267,16 @@ void MainWindow::on_connect_pushButton_released() {
 void MainWindow::on_handSend_pushButton_released() {
     // 获取 rmeote ip/ port 和内容
     QString string = ui->send_plainTextEdit->toPlainText();
-    if(string.length() != 0) {
-        QByteArray data;
-        QStringList tmp = string.split(" ");
-        bool ok;
-        for(auto itr = tmp.begin(); itr != tmp.end(); ++itr) {
-            data.push_back(itr->toUInt(&ok, 16));
-        }
-        netManager->dataSend(data, mode);
-    }
+//    if(string.length() != 0) {
+//        QByteArray data;
+//        QStringList tmp = string.split(" ");
+//        bool ok;
+//        for(auto itr = tmp.begin(); itr != tmp.end(); ++itr) {
+//            data.push_back(itr->toUInt(&ok, 16));
+//        }
+//        netManager->dataSend(data, mode);
+//    }
+    netManager->dataSend(string.toStdString().c_str(), mode);
 }
 
 void MainWindow::on_quit_pushButton_released() {
@@ -296,17 +297,18 @@ void MainWindow::remotePortSpinBoxSlot(int value) {
 }
 
 void MainWindow::sendPlainTextEditSlot() {
-    qDebug("%s", __func__);
-    QString string = ui->send_plainTextEdit->toPlainText();
-    if(string.length() != 0) {
-        QByteArray data;
-        QStringList tmp = string.split(" ");
-        bool ok;
-        for(auto itr = tmp.begin(); itr != tmp.end(); ++itr) {
-            data.push_back(itr->toUInt(&ok, 16));
-        }
-        ParameterCenter::getParameterCenterInstance()->setInputData(data);
-    }
+//    qDebug("%s", __func__);
+//    QString string = ui->send_plainTextEdit->toPlainText();
+//    if(string.length() != 0) {
+//        QByteArray data;
+//        QStringList tmp = string.split(" ");
+//        bool ok;
+//        for(auto itr = tmp.begin(); itr != tmp.end(); ++itr) {
+//            long num = itr->toLong(&ok, 16);
+//            data.push_back(itr->toLong(&ok, 16));
+//        }
+//        ParameterCenter::getParameterCenterInstance()->setInputData(data);
+//    }
 
 }
 

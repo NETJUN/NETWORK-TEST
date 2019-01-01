@@ -10,9 +10,9 @@ NetManager::NetManager(QObject *parent) {
 }
 
 NetManager::~NetManager() {
-    if(tcpServer != nullptr) {
-        delete tcpServer;
-    }
+//    if(tcpServer != nullptr) {
+//        delete tcpServer;
+//    }
     if(tcpClient != nullptr) {
         delete tcpClient;
     }
@@ -50,7 +50,7 @@ void NetManager::TCPConnectToHost() {
 
 void NetManager::startListen() {
     tcpServer = new TCPServer(this);
-    if(!tcpServer->listen(QHostAddress("192.168.1.100"), localPort)) {
+    if(!tcpServer->listen(localHost, localPort)) {
         delete tcpServer;
         tcpServer = NULL;
         qDebug("Failed to bind to port");
