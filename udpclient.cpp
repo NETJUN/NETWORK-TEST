@@ -2,6 +2,10 @@
 #include "ParameterCenter.h"
 #include <QMessageBox>
 #include <QUdpSocket>
+#include <iostream>
+
+using namespace  std;
+
 
 UDPClient::UDPClient(QObject *parent)
     :sendDataSize(0){
@@ -27,16 +31,21 @@ void UDPClient::connectToHost(const QHostAddress remoteIp, const quint16 port){
  */
 void UDPClient::sendData(const QByteArray &data)
 {
-    qDebug("%s", __func__);
+    //qDebug("%s", __func__);
     if(udpSendSocket == nullptr)
         return;
+    QByteArray bytearray;
     for(int i = 0; i < sendDataSize; ++i) {
-        qint64 sendSize = udpSendSocket->writeDatagram(data, data.size(), remoteIpAddress, remotePort);
-        if(sendSize != data.size()) {
-            qDebug("输出有问题");
-        }
+        if(i & 0x01)
+            bytearray.push_back(QByteArray("1111"));
+        else
+            bytearray.push_back(QByteArray("2222"));
     }
-    emit updateState(QString(), QVariant(QVariant::Int), sendDataSize * data.size());
+    qint64 sendSize = udpSendSocket->writeDatagram(bytearray, bytearray.size(), remoteIpAddress, remotePort);
+    if(sendSize != bytearray.size()) {
+        qDebug("输出有问题");
+    }
+    //emit updateState(QString(), QVariant(QVariant::Int), sendDataSize * data.size());
 }
 
 /**
@@ -118,7 +127,8 @@ void UDPClient::udpStart(const QHostAddress localIp, const int listnerPort, cons
         connect(udpSendSocket, SIGNAL(readyRead()), this, SLOT(readySendRead()));
         connect(udpSendSocket, SIGNAL(error(QAbstractSocket::SocketError)),this,SLOT(connection_error(QAbstractSocket::SocketError)));
     }
-
+    this->remoteIpAddress = remoteIp;
+    this->remotePort = remotePort;
     // 开启接收Socket
     udpListnerStart(localIp, listnerPort);
 }
@@ -149,7 +159,7 @@ void UDPClient::udpStop(const QString string, const QString remoteIp, const int 
  */
 void UDPClient::readyListnerRead()
 {
-    qDebug("%s", __func__);
+   // qDebug("%s", __func__);
     readyRead(udpListnerSocket);
 }
 
@@ -160,22 +170,32 @@ void UDPClient::readyListnerRead()
  */
 void UDPClient::readyRead(QUdpSocket* socket)
 {
-    qDebug("%s", __func__);
+    //qDebug("%s", __func__);
     QByteArray Buffer;
     Buffer.resize(socket->pendingDatagramSize());
 
     QHostAddress sender;
     quint16 senderPort;
     socket->readDatagram(Buffer.data(), Buffer.size(), &sender, &senderPort);
-    sendDataSize = Buffer.toUInt();
+    QString str("0x");
+
+    for(int i = Buffer.size(); i >= 0; --i) {
+        int a = (int)Buffer[i];
+        str += QString::number(a, 10);
+    }
+
+    bool ok;
+    sendDataSize = str.toUInt(&ok, 16);
+
+
+    //qDebug() << "Message from:" << sender.toString();
+    //qDebug() << "Message port:" << senderPort;
+    qDebug() << "Message: " << sendDataSize;
+
+    //emit valueChanged(Buffer);
+    //emit updateState(QString(), Buffer.size(), QVariant(QVariant::Int));
+
     sendData(ParameterCenter::getParameterCenterInstance()->getInputData());
-
-    qDebug() << "Message from:" << sender.toString();
-    qDebug() << "Message port:" << senderPort;
-    qDebug() << "Message: " << Buffer;
-
-    emit valueChanged(Buffer);
-    emit updateState(QString(), Buffer.size(), QVariant(QVariant::Int));
 }
 
 /**
