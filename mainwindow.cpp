@@ -9,6 +9,9 @@
 #include "DataOutputShow.h"
 #include "ParameterCenter.h"
 #include <QSettings>
+#include <QMessageBox>
+#include <QFileDialog>
+#include <QThread>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -18,6 +21,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     /* 读取配置文件 */
     doSettings(false);
+
+    // udp性能测试
+    file = nullptr;
+    udpDataFlag = false;
 
     /* 设置默认通讯模式 */
     ui->tcpclient_radioButton->setChecked(true);
@@ -34,6 +41,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->localport_spinBox->setValue(mLocalPort);
 
     connected = false;
+    // 初始化actions
+    createActions();
+    // 初始化菜单
+    creatMenus();
     // 初始化状态栏
     initStatusBarWidget();
     // 创建网络管理对象
@@ -105,13 +116,8 @@ void MainWindow::connectNet() {
 }
 
 void MainWindow::updateReceiveText(const QString string) {
-    QString oldString = ui->receive_textBrowser->toPlainText();
-    ui->receive_textBrowser->setText(oldString + string + "\n");
-
-    // 将光标移动到最后位置
-    QTextCursor tmpCursor = ui->receive_textBrowser->textCursor();
-    tmpCursor.movePosition(QTextCursor::End, QTextCursor::MoveAnchor, 4);
-    ui->receive_textBrowser->setTextCursor(tmpCursor);
+    udpRecvData = string;
+    udpDataFlag = true;
 }
 
 /**
@@ -172,6 +178,41 @@ void MainWindow::init() {
     updateStateBar(QString::fromLocal8Bit("本地IP: ") + commonHelper.getLocalHostIP().toString() + QString::fromLocal8Bit(" 无连接"),
                    QVariant(QVariant::Int), QVariant(QVariant::Int));
 }
+
+void MainWindow::udpNetTest() {
+    QByteArray data;
+    if(file == nullptr) {
+        qDebug() << "file is empty!!!";
+        return;
+    }
+    data = file->read(100);
+    while(data.size() != 0) {
+        netManager->dataSend(file->read(100), mode);
+        while(!udpDataFlag) {
+            QThread::msleep(1);
+        }
+        if(data != udpRecvData) {
+            qDebug() << "file check failed!";
+            return;
+        }
+        data = file->read(100);
+    }
+    file->close();
+    qDebug() << "file check success!";
+}
+
+void MainWindow::createActions() {
+    openfile = new QAction(QIcon(":/images/res/open.png"), tr("&openFile"), this);
+    openfile->setShortcut(tr("Ctrl+O"));
+    openfile->setToolTip(tr("Open a file"));
+    openfile->setStatusTip(tr("Open a file"));
+    connect(openfile, SIGNAL(triggered()), this, SLOT(openFile()));
+}
+
+void MainWindow::creatMenus() {
+    ui->menuYywr->addAction(openfile);
+}
+
 
 /**
  * 断开UDP时调用该函数
@@ -276,7 +317,8 @@ void MainWindow::on_handSend_pushButton_released() {
 //        }
 //        netManager->dataSend(data, mode);
 //    }
-    netManager->dataSend(string.toStdString().c_str(), mode);
+    //netManager->dataSend(string.toStdString().c_str(), mode);
+    udpNetTest();
 }
 
 void MainWindow::on_quit_pushButton_released() {
@@ -359,4 +401,18 @@ void MainWindow::TCPConnected() {
     ui->localport_spinBox->setEnabled(false);
     // 使能button
     ui->handSend_pushButton->setEnabled(true);
+}
+
+void MainWindow::openFile() {
+    QString filePath = QFileDialog::getOpenFileName(this, "Select A File", "/", "DXF File(*.dxf)");
+    if(filePath.isEmpty()) {
+        QMessageBox::information(this, tr("Information"), tr("Open failed"));
+        return;
+    }
+    file = new QFile(filePath);
+    bool ok = file->open(QIODevice::ReadOnly);
+    if(!ok) {
+        file = nullptr;
+        return;
+    }
 }

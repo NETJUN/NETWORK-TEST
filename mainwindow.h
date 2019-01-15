@@ -10,6 +10,7 @@
 #include <QTcpSocket>
 #include <QLabel>
 #include <QPushButton>
+#include <QFile>
 
 namespace Ui {
 class MainWindow;
@@ -39,6 +40,8 @@ private slots:
 
     void TCPConnected();
 
+    void openFile();
+
 private:
     void initStatusBarWidget();
     void disConnectNet();
@@ -60,6 +63,17 @@ private:
     quint16 mLocalPort;
 
 private:
+// udp 点对点丢包率测试
+    void udpNetTest();
+    bool udpDataFlag;
+    QString udpRecvData;
+private:
+    void createActions();
+    void creatMenus();
+// actions
+    QAction *openfile;
+
+private:
     /** 状态标签 */
     QLabel *statusLabel;
     /** 总接收数量显示标签 */
@@ -75,6 +89,8 @@ private:
     /** 发送总数 */
     quint64 mSendNum;
     CONNECTION_MODE mode;
+
+    QFile* file;
 };
 
 #endif // MAINWINDOW_H

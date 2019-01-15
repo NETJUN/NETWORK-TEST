@@ -37,3 +37,6 @@ HEADERS  += mainwindow.h \
     ParameterCenter.h
 
 FORMS    += mainwindow.ui
+
+RESOURCES += \
+    image.qrc

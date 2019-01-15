@@ -34,15 +34,15 @@ void UDPClient::sendData(const QByteArray &data)
     //qDebug("%s", __func__);
     if(udpSendSocket == nullptr)
         return;
-    QByteArray bytearray;
-    for(int i = 0; i < sendDataSize; ++i) {
-        if(i & 0x01)
-            bytearray.push_back(QByteArray("1111"));
-        else
-            bytearray.push_back(QByteArray("2222"));
-    }
-    qint64 sendSize = udpSendSocket->writeDatagram(bytearray, bytearray.size(), remoteIpAddress, remotePort);
-    if(sendSize != bytearray.size()) {
+//    QByteArray bytearray;
+//    for(int i = 0; i < sendDataSize; ++i) {
+//        if(i & 0x01)
+//            bytearray.push_back(QByteArray("1111"));
+//        else
+//            bytearray.push_back(QByteArray("2222"));
+//    }
+    qint64 sendSize = udpSendSocket->writeDatagram(data, data.size(), remoteIpAddress, remotePort);
+    if(sendSize != data.size()) {
         qDebug("输出有问题");
     }
     //emit updateState(QString(), QVariant(QVariant::Int), sendDataSize * data.size());
@@ -177,25 +177,9 @@ void UDPClient::readyRead(QUdpSocket* socket)
     QHostAddress sender;
     quint16 senderPort;
     socket->readDatagram(Buffer.data(), Buffer.size(), &sender, &senderPort);
-    QString str("0x");
 
-    for(int i = Buffer.size(); i >= 0; --i) {
-        int a = (int)Buffer[i];
-        str += QString::number(a, 10);
-    }
-
-    bool ok;
-    sendDataSize = str.toUInt(&ok, 16);
-
-
-    //qDebug() << "Message from:" << sender.toString();
-    //qDebug() << "Message port:" << senderPort;
-    qDebug() << "Message: " << sendDataSize;
-
-    //emit valueChanged(Buffer);
-    //emit updateState(QString(), Buffer.size(), QVariant(QVariant::Int));
-
-    sendData(ParameterCenter::getParameterCenterInstance()->getInputData());
+    emit valueChanged(Buffer);
+    emit updateState(QString(), Buffer.size(), QVariant(QVariant::Int));
 }
 
 /**
