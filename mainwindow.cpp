@@ -116,8 +116,12 @@ void MainWindow::connectNet() {
 }
 
 void MainWindow::updateReceiveText(const QString string) {
-    udpRecvData = string;
-    udpDataFlag = true;
+    QString oldstring = ui->receive_textBrowser->toPlainText();
+    ui->receive_textBrowser->setText(oldstring + string + "\n");
+
+    QTextCursor tmpCursor = ui->receive_textBrowser->textCursor();
+    tmpCursor.movePosition(QTextCursor::End, QTextCursor::MoveAnchor, 4);
+    ui->receive_textBrowser->setTextCursor(tmpCursor);
 }
 
 /**
@@ -177,28 +181,6 @@ void MainWindow::init() {
     netManager->UDPStop();
     updateStateBar(QString::fromLocal8Bit("本地IP: ") + commonHelper.getLocalHostIP().toString() + QString::fromLocal8Bit(" 无连接"),
                    QVariant(QVariant::Int), QVariant(QVariant::Int));
-}
-
-void MainWindow::udpNetTest() {
-    QByteArray data;
-    if(file == nullptr) {
-        qDebug() << "file is empty!!!";
-        return;
-    }
-    data = file->read(100);
-    while(data.size() != 0) {
-        netManager->dataSend(file->read(100), mode);
-        while(!udpDataFlag) {
-            QThread::msleep(1);
-        }
-        if(data != udpRecvData) {
-            qDebug() << "file check failed!";
-            return;
-        }
-        data = file->read(100);
-    }
-    file->close();
-    qDebug() << "file check success!";
 }
 
 void MainWindow::createActions() {

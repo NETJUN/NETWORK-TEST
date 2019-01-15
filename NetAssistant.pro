@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     tcpserver.cpp \
     netmanager.cpp \
     DataOutputShow.cpp \
-    ParameterCenter.cpp
+    ParameterCenter.cpp \
+    udptransfertest.cpp
 
 HEADERS  += mainwindow.h \
     udpclient.h \
@@ -34,7 +35,8 @@ HEADERS  += mainwindow.h \
     netmanager.h \
     BaseDef.h \
     DataOutputShow.h \
-    ParameterCenter.h
+    ParameterCenter.h \
+    udptransfertest.h
 
 FORMS    += mainwindow.ui
 

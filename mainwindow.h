@@ -1,6 +1,7 @@
 ﻿#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "udptransfertest.h"
 #include "netmanager.h"
 #include "udpclient.h"
 #include "commonhelper.h"
@@ -64,9 +65,7 @@ private:
 
 private:
 // udp 点对点丢包率测试
-    void udpNetTest();
-    bool udpDataFlag;
-    QString udpRecvData;
+    UdpTransferTest* udpTest;
 private:
     void createActions();
     void creatMenus();
