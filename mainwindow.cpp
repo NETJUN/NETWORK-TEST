@@ -404,7 +404,7 @@ void MainWindow::TCPConnected() {
 }
 
 void MainWindow::openFile() {
-    QString filePath = QFileDialog::getOpenFileName(this, "Select A File", "/", "DXF File(*.dxf)");
+    QString filePath = QFileDialog::getOpenFileName(this, "Select A File", "/", "File(*)");
     if(filePath.isEmpty()) {
         QMessageBox::information(this, tr("Information"), tr("Open failed"));
         return;
